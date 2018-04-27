@@ -1,70 +1,60 @@
-// var request = require('request');
-var sensorLib = require('node-dht-sensor');
+// var sensorLib = require('node-dht-sensor');
 
-var settings = {
-	sensorType: 11,
-	gpioPin: 4
-};
-
-var getReading = new Promise((resolve, reject) => {
-	// sensorLib.read(dhtSensor.settings.sensorType, dhtSensor.settings.gpioPin, function(err, tempC, humidity){
-	// console.log(this.settings);
-	console.log(settings);
-	sensorLib.read(11, 4, function(err, tempC, humidity){
-		if(err){
-			console.log(err);
-			reject('test');
-			// reject(err.message);
-			// reject(new Error(err));
-			// dhtSensor.sendErrorToServer(err);
-		}
-		var data = {
-			temperature: dhtSensor.convertTempToF(tempC).toFixed(1),
-			humidity: humidity.toFixed(1)
-		};
-		console.log('temp: ' + data.temp + '°F, ' + 'humidity: ' + data.humidity + '%');
-		// dhtSensor.sendDataToServer(data);
-		// setTimeout(function() {
-			// dhtSensor.read();
-		// }, 15000);
-		resolve('success');
-	})
-});
-var convertTempToF = function(c){
-	return c * 9/5 + 32;
+var dhtSensor = {
+	_debug: false,
+	_fakeReading: true,
+	reading: null,
+	_sensorType: null,
+	_gpioPin: null,
+	init: function(args){
+		dhtSensor._log('init', args);
+		dhtSensor._sensorType = args.sensorType;
+		dhtSensor._gpioPin = args.gpioPin;
+	},
+	updateReading: function(){
+		dhtSensor._log('updateReading');
+		return new Promise((resolve, reject) => {
+			var updateReadingMethod = typeof sensorLib === 'undefined' ? null : sensorLib.read;
+			if(dhtSensor._fakeReading)
+				updateReadingMethod = dhtSensor._fakeSensorRead;
+			updateReadingMethod(dhtSensor._sensorType, dhtSensor._gpioPin, function(err, tempC, humidity){
+				if(err)
+					reject(err);
+				dhtSensor.reading = {
+					temperature: dhtSensor._convertTempToF(tempC).toFixed(1),
+					humidity: humidity.toFixed(1)
+				};
+				resolve(dhtSensor.reading);
+			});
+		})
+	},
+	getTemperatureReading: function(){
+		dhtSensor._log('getTemperatureReading', dhtSensor.reading.temperature);
+		return dhtSensor.reading.temperature;
+	},
+	getHumidityReading: function(){
+		dhtSensor._log('getHumidityReading', dhtSensor.reading.humidity);
+		return dhtSensor.reading.humidity;
+	},
+	_convertTempToF: function(c){
+		dhtSensor._log('_convertTempToF', c);
+		return c * 9/5 + 32;
+	},
+	_fakeSensorRead: function(sensorType, gpioPin, callback){
+		dhtSensor._log('_fakeSensorRead', sensorType, gpioPin);
+		callback(
+			// new Error('Could not read dht sensor'),
+			null,
+			dhtSensor._randomIntFromInterval(10, 40),
+			dhtSensor._randomIntFromInterval(10, 70)
+		);
+	},
+	_randomIntFromInterval: function(min, max){
+		return Math.floor(Math.random() * (max - min + 1) + min);
+	},
+	_log: function(msg){
+		if(dhtSensor._debug)
+			console.log('dhtSensor.' + msg);
+	}
 }
-/* sendDataToServer: function(data){
-	request({
-		uri: 'http://studiomonitor.tylergreenphoto.com/api/reading',
-		method: 'POST',
-		headers: {
-			'X-AUTH-TOKEN': 'api:foo',
-			'Content-Type': 'application/json'
-		},
-		json: data
-	}, function(error, response, body){
-		if(!error && response.statusCode == 200){
-			console.log(body);
-		}else{
-			console.log(['Error', response.statusCode, response.body.message]);
-		}
-	});
-},
-sendErrorToServer: function(error){
-	request({
-		uri: 'http://studiomonitor.tylergreenphoto.com/api/error',
-		method: 'POST',
-		headers: {
-			'X-AUTH-TOKEN': 'api:foo',
-			'Content-Type': 'application/json'
-		},
-		json: {error: error}
-	}, function(error, response, body){
-		if(!error && response.statusCode == 200){
-			console.log(body);
-		}else{
-			console.log(['Error', response.statusCode, response.body.message]);
-		}
-	});
-} */
-module.exports = getReading;
+module.exports = dhtSensor;

@@ -1,0 +1,9 @@
+{
+	"logger": {
+		"logFile": "./var/log/development.log",
+		"level": "debug"
+	},
+	"studioMonitorApi": {
+		"baseUri": "http://studiomonitor/api"
+	}
+}

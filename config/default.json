@@ -1,0 +1,27 @@
+{
+	"console": {
+		"logLevel": "info"
+	},
+	"error": {
+		"timeout": 5000
+	},
+	"logger": {
+		"logFile": null,
+		"level": null
+	},
+	"dhtSensor": {
+		"sensorType": 11,
+		"gpioPin": 4
+	},
+	"waterSensor": {
+		"gpioPin": null
+	},
+	"humidifier": {
+		"gpioPin": null
+	},
+	"studioMonitorApi": {
+		"baseUri": "http://studiomonitor.tylergreenphoto.com/api",
+		"username": "api",
+		"password": "foo"
+	}
+}
