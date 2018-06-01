@@ -32,7 +32,8 @@ var waterSensor = {
 		callback(
 			// new Error('Could not read water sensor'),
 			null,
-			waterSensor._randomIntFromInterval(10, 90),
+			// waterSensor._randomIntFromInterval(10, 90),
+			50
 		);
 	},
 	_randomIntFromInterval: function(min, max){

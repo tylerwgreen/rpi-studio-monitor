@@ -1,6 +1,6 @@
 {
 	"logger": {
-		"logFile": "./var/log/development.log",
+		"logFile": "/var/log/development.log",
 		"level": "debug"
 	},
 	"studioMonitorApi": {

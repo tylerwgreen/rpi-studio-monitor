@@ -1,8 +1,8 @@
-// var sensorLib = require('node-dht-sensor');
+var sensorLib = require('node-dht-sensor');
 
 var dhtSensor = {
 	_debug: false,
-	_fakeReading: true,
+	// _fakeReading: false,
 	reading: null,
 	_sensorType: null,
 	_gpioPin: null,
@@ -14,10 +14,11 @@ var dhtSensor = {
 	updateReading: function(){
 		dhtSensor._log('updateReading');
 		return new Promise((resolve, reject) => {
-			var updateReadingMethod = typeof sensorLib === 'undefined' ? null : sensorLib.read;
+			/* var updateReadingMethod = typeof sensorLib === 'undefined' ? null : sensorLib.read;
 			if(dhtSensor._fakeReading)
 				updateReadingMethod = dhtSensor._fakeSensorRead;
-			updateReadingMethod(dhtSensor._sensorType, dhtSensor._gpioPin, function(err, tempC, humidity){
+			updateReadingMethod(dhtSensor._sensorType, dhtSensor._gpioPin, function(err, tempC, humidity){ */
+			sensorLib.read(dhtSensor._sensorType, dhtSensor._gpioPin, function(err, tempC, humidity){
 				if(err)
 					reject(err);
 				dhtSensor.reading = {
@@ -40,7 +41,7 @@ var dhtSensor = {
 		dhtSensor._log('_convertTempToF', c);
 		return c * 9/5 + 32;
 	},
-	_fakeSensorRead: function(sensorType, gpioPin, callback){
+	/* _fakeSensorRead: function(sensorType, gpioPin, callback){
 		dhtSensor._log('_fakeSensorRead', sensorType, gpioPin);
 		callback(
 			// new Error('Could not read dht sensor'),
@@ -48,7 +49,7 @@ var dhtSensor = {
 			dhtSensor._randomIntFromInterval(10, 40),
 			dhtSensor._randomIntFromInterval(10, 70)
 		);
-	},
+	}, */
 	_randomIntFromInterval: function(min, max){
 		return Math.floor(Math.random() * (max - min + 1) + min);
 	},

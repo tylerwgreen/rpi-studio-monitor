@@ -1,7 +1,7 @@
 {
 	"logger": {
-		"logFile": "./var/log/production.log",
-		"level": "error"
+		"logFile": "/var/log/production.log",
+		"level": "debug"
 	},
 	"studioMonitorApi": {
 		"baseUri": "http://studiomonitor.tylergreenphoto.com/api"

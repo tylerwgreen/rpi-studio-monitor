@@ -1,7 +1,7 @@
 // var sensorLib = require('node-dht-sensor');
 
 var humidifier = {
-	_debug: false,
+	_debug: true,
 	_gpioPin: null,
 	_status: null,
 	init: function(args){
@@ -31,6 +31,10 @@ var humidifier = {
 	_log: function(msg){
 		if(humidifier._debug)
 			console.log('humidifier.' + msg);
+	},
+	test: function(){
+		humidifier._log('test');
+		setTimeout(humidifier.test, 1000);
 	}
 }
 module.exports = humidifier;

@@ -1,3 +1,4 @@
+process.env['NODE_CONFIG_DIR'] = __dirname + '/config/';
 var logger = require('node-logger');
 var config = require('config');
 
@@ -8,14 +9,14 @@ var app = {
 		app.error.timeout = config.get('error.timeout');
 		app.logger = logger.createLogger(config.get('logger.logFile'));
 		app.logger.setLevel(config.get('logger.level'));
-		app.settings = require('./app/settings');
-		app.dhtSensor = require('./app/dhtSensor');
+		app.settings = require(__dirname + '/app/settings');
+		app.dhtSensor = require(__dirname + '/app/dhtSensor');
 		app.dhtSensor.init(config.get('dhtSensor'));
-		app.waterSensor = require('./app/waterSensor');
+		app.waterSensor = require(__dirname + '/app/waterSensor');
 		app.waterSensor.init(config.get('waterSensor'));
-		app.humidifier = require('./app/humidifier');
+		app.humidifier = require(__dirname + '/app/humidifier');
 		app.humidifier.init(config.get('humidifier'));
-		app.studioMonitorApi = require('./app/studioMonitorApi');
+		app.studioMonitorApi = require(__dirname + '/app/studioMonitorApi');
 		app.studioMonitorApi.init(config.get('studioMonitorApi'));
 		app.console.debug('app.init|success');
 		// update settings and init readings
